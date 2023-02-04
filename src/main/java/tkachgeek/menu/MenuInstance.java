@@ -14,12 +14,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import tkachgeek.tkachutils.items.ItemFactory;
 import tkachgeek.tkachutils.messages.Message;
 import tkachgeek.tkachutils.messages.MessagesUtils;
 import tkachgeek.tkachutils.server.ServerUtils;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,19 +60,12 @@ public abstract class MenuInstance implements Menu {
 
    public void setValue(int index, String value) {
       ItemStack item = inventory.getItem(index);
-      ItemMeta meta = item.getItemMeta();
-      List<Component> lore = new ArrayList<>();
-      lore.add(Component.text(value));
-      if (ServerUtils.isVersionBefore1_16_5()) {
-         List<String> old_lore = new ArrayList<>();
-         for (Component line : lore) {
-            old_lore.add(Message.getInstance(line).toString());
-         }
-         meta.setLore(old_lore);
-      } else {
-         meta.lore(lore);
+      if (item == null) {
+         return;
       }
-      inventory.getItem(index).setItemMeta(meta);
+
+      List<Component> lore = Arrays.asList(Component.text(value));
+      item.setItemMeta(ItemFactory.of(item).description(lore).build().getItemMeta());
       values.put(index, value);
    }
 

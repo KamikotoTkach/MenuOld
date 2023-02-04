@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.WeakHashMap;
 
@@ -42,10 +43,10 @@ public class Listener implements org.bukkit.event.Listener {
   }
 
   @EventHandler
-  void onChatMessage(AsyncChatEvent event) {
+  void onChatMessage(AsyncPlayerChatEvent event) {
     Bukkit.getScheduler().scheduleSyncDelayedTask(Menus.plugin, () -> {
       if (toTakeValue.containsKey(event.getPlayer())) {
-        toTakeValue.get(event.getPlayer()).returnValue(event.originalMessage().toString()); //todo:мб тут багуля, поменял эвент и метод, но не чекал
+        toTakeValue.get(event.getPlayer()).returnValue(event.getMessage()); //todo:мб тут багуля, поменял эвент и метод, но не чекал
         toTakeValue.remove(event.getPlayer());
       }
     }, 0);
