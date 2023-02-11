@@ -6,7 +6,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import tkachgeek.menu.MenuInstance;
 import tkachgeek.menu.SlotClick;
-import tkachgeek.yaml.YmlConfigManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ public class ConfigurableMenu extends MenuInstance {
     super(Component.text("title"), 27);
     loadFromFile("menus/container");
   }
+  
   public ConfigurableMenu(Component title, int size, String path) {
     super(title, size);
     loadFromFile(path);
@@ -30,7 +30,7 @@ public class ConfigurableMenu extends MenuInstance {
   }
   
   protected void loadFromFile(String path) {
-    template = YmlConfigManager.load(path, MenuTemplate.class);
+    template = manager.yml.load(path, MenuTemplate.class);
     List<ItemStack> content = new ArrayList<>();
     template.moveContents(content);
     if (content.isEmpty()) return;

@@ -18,7 +18,7 @@ public class PagedMenuBuilder {
   String title = "";
   String shape;
   String[] shapeArr;
-  ItemStack[] cashed = null;
+  ItemStack[] cached = null;
   Character dynamic = '#';
   
   HashMap<Character, ItemStack> staticItems = new HashMap<>();
@@ -37,7 +37,7 @@ public class PagedMenuBuilder {
   };
   
   SlotClick next = (click, item) -> {
-    page = Math.min(getMaxPage()-1, page+1);
+    page = Math.min(getMaxPage() - 1, page + 1);
     draw();
   };
   
@@ -47,8 +47,8 @@ public class PagedMenuBuilder {
   };
   
   protected void updateControls() {
-    ItemFactory.of(previousItem).name(Component.text("Страница " + (page+1) + "/" + getMaxPage())).build();
-    ItemFactory.of(nextItem).name(Component.text("Страница " + (page+1) + "/" + getMaxPage())).build();
+    ItemFactory.of(previousItem).name(Component.text("Страница " + (page + 1) + "/" + getMaxPage())).build();
+    ItemFactory.of(nextItem).name(Component.text("Страница " + (page + 1) + "/" + getMaxPage())).build();
   }
   
   MenuInstance menuInstance;
@@ -56,9 +56,11 @@ public class PagedMenuBuilder {
   public PagedMenuBuilder(MenuInstance menuInstance) {
     this.menuInstance = menuInstance;
   }
+  
   public int getMaxPage() {
-    return dynamicItems.size()/calcEntries(shape, dynamic);
+    return dynamicItems.size() / calcEntries(shape, dynamic);
   }
+  
   protected int calcEntries(String str, char character) {
     int counter = 0;
     for (char ch : str.toCharArray()) {
@@ -139,39 +141,41 @@ public class PagedMenuBuilder {
       page--;
       dynamicPointer = calcEntries(shape, dynamic) * page;
     }
-    cashed = new ItemStack[col * row];
+    cached = new ItemStack[col * row];
     int slot = 0;
     for (String line : shapeArr) {
       for (char character : line.toCharArray()) {
         if (staticItems.containsKey(character)) {
-          cashed[slot] = staticItems.get(character);
+          cached[slot] = staticItems.get(character);
         } else if (dynamic == character) {
           if (dynamicItems.size() <= dynamicPointer) continue;
-          cashed[slot] = dynamicItems.get(dynamicPointer++);
+          cached[slot] = dynamicItems.get(dynamicPointer++);
         }
         slot++;
       }
     }
   }
-
-  public void build(){
-    menuInstance.inventory = Bukkit.createInventory(null, col*row);
+  
+  public void build() {
+    menuInstance.inventory = Bukkit.createInventory(null, col * row);
     draw();
   }
-  public void build(InventoryType inventoryType){
-    if(inventoryType.getDefaultSize() != col*row) {
-      Bukkit.getLogger().warning("Размеры инвентаря " + inventoryType.getDefaultTitle() +" не " + col +"*"+row);
+  
+  public void build(InventoryType inventoryType) {
+    if (inventoryType.getDefaultSize() != col * row) {
+      Bukkit.getLogger().warning("Размеры инвентаря " + inventoryType.getDefaultTitle() + " не " + col + "*" + row);
     }
     menuInstance.inventory = Bukkit.createInventory(null, inventoryType);
     draw();
   }
+  
   protected void draw() {
     generateContent();
     updateControls();
-    menuInstance.inventory.setContents(cashed);
+    menuInstance.inventory.setContents(cached);
   }
   
   void onClick(int slot, ClickType click) {
-    runnable.getOrDefault(shapeArr[slot / col].charAt(slot % col), nothing).handle(click, cashed[slot]);
+    runnable.getOrDefault(shapeArr[slot / col].charAt(slot % col), nothing).handle(click, cached[slot]);
   }
 }

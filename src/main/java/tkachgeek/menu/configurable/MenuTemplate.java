@@ -2,7 +2,7 @@ package tkachgeek.menu.configurable;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import tkachgeek.yaml.YmlConfig;
+import tkachgeek.config.yaml.YmlConfig;
 
 import java.util.Arrays;
 import java.util.HashMap;

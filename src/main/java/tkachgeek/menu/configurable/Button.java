@@ -22,14 +22,14 @@ public class Button {
   }
   
   Button(ItemStack item) {
-    name = MiniMessage.get().serialize(item.displayName());
+    name = MiniMessage.miniMessage().serialize(item.displayName());
     description = new ArrayList<>();
     amount = item.getAmount();
     material = item.getType().toString();
     
     if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
       for (Component component : item.getItemMeta().lore()) {
-        description.add(MiniMessage.get().serialize(component));
+        description.add(MiniMessage.miniMessage().serialize(component));
       }
     }
   }
@@ -38,9 +38,9 @@ public class Button {
   ItemStack createItem() {
     assert name != null;
     return ItemFactory.of(Material.valueOf(material))
-       .name(MiniMessage.get().parse(name).decoration(TextDecoration.ITALIC, false))
-       .description(description.stream().map(x -> MiniMessage.get().parse(x).decoration(TextDecoration.ITALIC, false)).collect(Collectors.toList()))
-       .amount(amount)
-       .build();
+                      .name(MiniMessage.miniMessage().deserialize(name).decoration(TextDecoration.ITALIC, false))
+                      .description(description.stream().map(x -> MiniMessage.miniMessage().deserialize(x).decoration(TextDecoration.ITALIC, false)).collect(Collectors.toList()))
+                      .amount(amount)
+                      .build();
   }
 }
